@@ -108,6 +108,7 @@ public class PongPanel extends JPanel implements ActionListener, KeyListener {
                xPosition += WINNER_TEXT_X;
            }
            g.drawString(WINNER_TEXT, xPosition, WINNER_TEXT_Y);
+           g.drawString("Press Enter to play again!", getWidth() /2 - 200, getHeight()-200);
        }
 	}
 
@@ -204,7 +205,17 @@ public class PongPanel extends JPanel implements ActionListener, KeyListener {
 		if(event.getKeyCode() == KeyEvent.VK_W || event.getKeyCode() == KeyEvent.VK_S) {
 			paddle1.setYVelocity(0);
 		}
-
+		if(event.getKeyCode() == KeyEvent.VK_ENTER) {
+			// reset scores and play again
+			if(gameState == GameState.GameOver) {
+				if(event.getKeyCode() == KeyEvent.VK_ENTER) {
+					player1Score = 0;
+					player2Score = 0;
+					gameWinner = null;
+					gameState = GameState.Initialising;
+				}
+			}
+		}
 	}
 
 	@Override

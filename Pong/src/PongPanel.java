@@ -8,6 +8,8 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
+import java.io.File;
+import javax.sound.sampled.*;
 
 import javax.swing.JPanel;
 import javax.swing.Timer;
@@ -48,6 +50,32 @@ public class PongPanel extends JPanel implements ActionListener, KeyListener {
 		paddle1 = new Paddles(Player.One, getWidth(), getHeight()) ;
 		paddle2 = new Paddles(Player.Two, getWidth(), getHeight()) ;
 	}
+	
+	public void ballSound() {
+		try {
+			File file = new File("ball-hit.wav");
+			AudioInputStream paddleSound = AudioSystem.getAudioInputStream(file);
+			Clip pingPong = AudioSystem.getClip();
+			pingPong.open(paddleSound);
+			pingPong.start();
+		}catch(Exception e) {
+			System.out.println(e);
+		}
+	}
+	
+	public void scoreSound() {
+		try {
+			File file = new File("powerup.wav");
+			AudioInputStream points = AudioSystem.getAudioInputStream(file);
+			Clip pointSound = AudioSystem.getClip();
+			pointSound.open(points);
+			pointSound.start();
+		}catch(Exception e) {
+			System.out.println(e);
+		}
+	}
+
+	
 
 	private void update() {
 		switch (gameState) {
@@ -153,14 +181,17 @@ public class PongPanel extends JPanel implements ActionListener, KeyListener {
 	
 	private void checkPaddleBounce() {
 		if(ball.getXVelocity() < 0 && ball.getRectangle().intersects(paddle1.getRectangle())) {
+			ballSound();
 			ball.setXVelocity(BALL_MOVEMENT_SPEED);
 		}
 		if(ball.getXVelocity() > 0 && ball.getRectangle().intersects(paddle2.getRectangle())) {
+			ballSound();
 			ball.setXVelocity(-BALL_MOVEMENT_SPEED);
 		}
 	}
 	
 	private void addScore(Player player) {
+		scoreSound();	
 		if (player == Player.One) player1Score++;
 		else if (player == Player.Two) player2Score++;
 	}
